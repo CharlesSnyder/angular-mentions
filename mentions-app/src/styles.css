@@ -1,0 +1,26 @@
+/* You can add global styles to this file, and also import other style files */
+table {
+    border-collapse: separate;
+    border-spacing: 0 20px;
+}
+
+tr {
+    border: solid;
+    border-width: 1px 0;
+    border-color: grey;
+}
+
+tr:first-child {
+    border-top: none;
+}
+
+tr:last-child {
+    border-bottom: none;
+}
+
+td {
+    font-family: sans-serif;
+    font-size: 14px;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="row center">
+    <img src="assets/limblelogo.jpg">
+  </div>
+  <br>
+  <hr>
+  <div class="row">
+    <p id="commentsHeader" class="sectionHeader">Comments:</p>
+  </div>
+  <div class="row commentTable">
+    <table id="commentsTable">
+      <tr *ngFor="let comment of comments; let i = index">
+        <img class="chatBubble" src="assets/Speech_bubble.svg">
+        <td class="comment"> {{comment.content}} </td>
+        <td class="commentUser"> {{comment.user}} </td>
+        <td> {{comment.time}} </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="form-group">
+    <textarea [matAutocomplete]="auto" id="commentBox" name="commentBox" [formControl]="userControl"
+      class="form-control" #commentBox placeholder="Leave a comment..." rows="3"
+      (click)="getCaretPosition(commentBox, true)" (keydown)="keyPress($event)"></textarea>
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngFor="let user of filteredUsers | async" (onSelectionChange)="optionSelected(user)"
+        id="mentionsOption">
+        <img class="photo" [src]="user.photo">
+        <span>{{user.name}}</span> |
+        <small>{{user.handle}}</small>
+      </mat-option>
+    </mat-autocomplete>
+  </div>
+  <br>
+  <div class="form-group">
+    <button class="btn btn-primary btn-md float-end" (click)="addComment(commentBox.value)">Add Comment</button>
+  </div>
+</div>
