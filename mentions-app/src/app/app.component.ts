@@ -46,7 +46,7 @@ export class AppComponent implements OnInit {
       }
 
       //Scan for the active mention
-      var mention = this.scanForMentions(value);
+      var mention = this.scanForMentions(value, this.caretPosition - 1);
       if (mention != "") {
         //Remove the @ from the string
         const filterValue = mention.substring(1).toLowerCase();
@@ -85,9 +85,8 @@ export class AppComponent implements OnInit {
     }
   }
 
-  private scanForMentions(value: string | null) {
+  private scanForMentions(value: string | null, index: number) {
     if (value) {
-      var index = this.caretPosition - 1;
       //Search backwards for the @ character, if we have objects currently in the filter, we know that we're in the midst of a search
       //and can let the mention match proceed
       while (index >= 0 && (value.at(index) != " " || this.currentFilter.length != 0)) {
@@ -97,6 +96,15 @@ export class AppComponent implements OnInit {
         index--;
       }
       var startIndex = index;
+
+      if (index - 1 > 0) {
+        const charRegEx = /[A-Za-z]/;
+        let foundChar = value.at(index - 1)?.match(charRegEx);
+        if (foundChar != null) {
+          return "";
+        }
+      }
+
 
       if (startIndex >= 0 && value.at(startIndex) == '@') {
         //First set the end index to the first space to ignore other text that might not be part of the current mention
@@ -139,6 +147,14 @@ export class AppComponent implements OnInit {
     if (text != null && text.trim() !== "") {
       let newDate: Date = new Date();
       let comment = new Comment(text, "Charles", newDate.toLocaleString("en-US"));
+      let mentionArray = this.findAllMentions(text);
+      for(let mention of mentionArray) {
+        let user: User | undefined = this.findUser(mention);
+        if(user) {
+          this.alertUser(user);
+        }
+      }
+
       this.comments.push(comment);
     }
     this.userControl.setValue("");
@@ -210,6 +226,29 @@ export class AppComponent implements OnInit {
     } else {
       this.isSpacePressed = false;
     }
+  }
+
+  private findAllMentions(text: string): string[] {
+    const mentionRegex = /(?<=\s)@\w+|^@\w+/gm;
+    let mentionsArray: string[] = [];
+
+    if (text) {
+      let matches = text.matchAll(mentionRegex);
+      if (matches) {
+        for (let match of matches) {
+          let matchValue: string | undefined = match.at(0);
+          if (matchValue) {
+            mentionsArray.push(matchValue);
+          }
+        }
+      }
+    }
+    return mentionsArray;
+  }
+
+  private findUser(handle: string): User | undefined {
+    let handleToFind = handle.substring(1).toLowerCase();
+    return this.users.find(user => user.handle.toLowerCase() == handleToFind);
   }
 }
 
