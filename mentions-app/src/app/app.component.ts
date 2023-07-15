@@ -97,14 +97,15 @@ export class AppComponent implements OnInit {
       }
       var startIndex = index;
 
+      // handling email
       if (index - 1 > 0) {
-        const charRegEx = /[A-Za-z]/;
+        // can expand this reg ex as needed for certain characters
+        const charRegEx = /[A-Za-z0-9]/;
         let foundChar = value.at(index - 1)?.match(charRegEx);
         if (foundChar != null) {
           return "";
         }
       }
-
 
       if (startIndex >= 0 && value.at(startIndex) == '@') {
         //First set the end index to the first space to ignore other text that might not be part of the current mention
@@ -147,10 +148,11 @@ export class AppComponent implements OnInit {
     if (text != null && text.trim() !== "") {
       let newDate: Date = new Date();
       let comment = new Comment(text, "Charles", newDate.toLocaleString("en-US"));
+      // find all the mentions in the current comment text
       let mentionArray = this.findAllMentions(text);
-      for(let mention of mentionArray) {
+      for (let mention of mentionArray) {
         let user: User | undefined = this.findUser(mention);
-        if(user) {
+        if (user) {
           this.alertUser(user);
         }
       }
