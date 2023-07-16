@@ -98,9 +98,9 @@ export class AppComponent implements OnInit {
       var startIndex = index;
 
       // handling email
-      if (index - 1 > 0) {
+      if (index - 1 >= 0) {
         // can expand this reg ex as needed for certain characters
-        const charRegEx = /[A-Za-z0-9]/;
+        const charRegEx = /\w|\.|-/;
         let foundChar = value.at(index - 1)?.match(charRegEx);
         if (foundChar != null) {
           return "";
