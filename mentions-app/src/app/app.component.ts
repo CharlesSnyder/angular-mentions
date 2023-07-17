@@ -46,13 +46,13 @@ export class AppComponent implements OnInit {
       }
 
       //Scan for the active mention
-      var mention = this.scanForMentions(value, this.caretPosition - 1);
+      let mention = this.scanForMentions(value, this.caretPosition - 1);
       if (mention != "") {
         //Remove the @ from the string
-        const filterValue = mention.substring(1).toLowerCase();
+        let filterValue = mention.substring(1).toLowerCase();
 
         //First check to see if we have any exact matches following a space press
-        var equals = this.users.filter(user => user.name.toLowerCase() == filterValue || user.handle.toLowerCase() == filterValue);
+        let equals = this.users.filter(user => user.name.toLowerCase() == filterValue || user.handle.toLowerCase() == filterValue);
         //If there is only one option from the filter following a space press we can set the value
         if (equals && equals.length == 1 && this.isSpacePressed) {
           this.optionSelected(equals[0], true);
@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
         }
 
         //If nothing was an exact match, check for matches using includes
-        var filtered = this.users.filter(user => user.name.toLowerCase().includes(filterValue) || user.handle.toLowerCase().includes(filterValue));
+        let filtered = this.users.filter(user => user.name.toLowerCase().includes(filterValue) || user.handle.toLowerCase().includes(filterValue));
 
         //In this case we can set the value because there is only one option, simplify things for the user
         //The check for the caret position + 1 is so that if a user goes to edit a current mention, we don't add
@@ -95,7 +95,7 @@ export class AppComponent implements OnInit {
         }
         index--;
       }
-      var startIndex = index;
+      let startIndex = index;
 
       // handling email
       if (index - 1 >= 0) {
@@ -109,7 +109,7 @@ export class AppComponent implements OnInit {
 
       if (startIndex >= 0 && value.at(startIndex) == '@') {
         //First set the end index to the first space to ignore other text that might not be part of the current mention
-        var endIndex = value.indexOf(" ", startIndex);
+        let endIndex = value.indexOf(" ", startIndex);
 
         if (endIndex == -1) { //This case is when we're at the end of the current string object
           endIndex = value.length;
@@ -164,19 +164,19 @@ export class AppComponent implements OnInit {
 
   //This function will add the selected mention to the current text in the comment section
   optionSelected(selectedUser: User, fromSpacePress?: boolean) {
-    var index = this.caretPosition;
-    var textToAdd = selectedUser.handle;
+    let index = this.caretPosition;
+    let textToAdd = selectedUser.handle;
 
     //Search backwards from the caret position for the mention character @ 
     while (this.currentText.at(index) != '@' && index >= 0) {
       index--;
     }
-    var startIndex = index;
+    let startIndex = index;
     //The beginning should represent everything before and including the active @ character 
-    var beginning = this.currentText.substring(0, startIndex + 1);
+    let beginning = this.currentText.substring(0, startIndex + 1);
 
     //The ending will be all the text following the selected mention handle
-    var ending;
+    let ending;
     if (this.currentText.substring(this.caretPosition) == "") {
       //This is here so we don't add an extra space after a space press
       if (fromSpacePress) {
@@ -185,7 +185,7 @@ export class AppComponent implements OnInit {
         ending = " ";
       }
     } else {
-      var spaceIndex = this.caretPosition;
+      let spaceIndex = this.caretPosition;
       while (this.currentText.at(spaceIndex) != " " && spaceIndex < this.currentText.length) {
         spaceIndex++;
       }
@@ -193,14 +193,11 @@ export class AppComponent implements OnInit {
       ending = this.currentText.substring(spaceIndex);
     }
 
-    var result = beginning + textToAdd + ending;
+    let result = beginning + textToAdd + ending;
 
     //We don't want to trigger an endless loop here since the filter calls this optionSelected function
-    var options = { emitEvent: false };
+    let options = { emitEvent: false };
     this.userControl.setValue(result, options);
-
-    //Can do any kind of alerting logic here
-    //this.alertUser(selectedUser);
   }
 
   //Function to alert the selected user in some capacity
