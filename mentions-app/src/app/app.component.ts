@@ -8,6 +8,7 @@ import { map, Observable } from 'rxjs';
   styleUrls: ['./app.component.css']
 })
 
+//Adding comment
 export class AppComponent implements OnInit {
   @ViewChild("commentBox") commentBox: any;
   userControl = new FormControl('');
